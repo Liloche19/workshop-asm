@@ -6,7 +6,8 @@
 ##
 
 # Source files
-SRC	=	src/main.s
+SRC	=	src/main.s\
+		src/strlen.s
 
 OBJ_DEBUG	=	$(SRC:%.s=./obj/debug/%.o)
 OBJ_RELEASE	=	$(SRC:%.s=./obj/release/%.o)
@@ -14,7 +15,8 @@ OBJ_RELEASE	=	$(SRC:%.s=./obj/release/%.o)
 # Compilation parameters
 COMPILER	=	nasm
 COMPILER_FLAGS_DEBUG	=	-f elf64
-COMPILER_FLAGS_RELEASE	=	-f elf64
+COMPILER_FLAGS_RELEASE	=	-f elf64 -Ox
+LINKER_FLAGS	=	-s -nmagic -O1
 MAKEFLAGS	+=	-j$(shell nproc) --silent --no-print-directory
 
 N_FILES	:=	$(words $(SRC))
@@ -46,7 +48,7 @@ $(NAME):
 	@echo ""
 	@echo -ne "[$(YELLOW)$(NAME)$(RESET)] "
 	@echo -ne "Compiling main program...\n"
-	@ld -o $(NAME) $(OBJ_RELEASE)
+	@ld -o $(NAME) $(OBJ_RELEASE) $(LINKER_FLAGS)
 	@echo ""
 	@echo -ne "[$(YELLOW)$(NAME)$(RESET)] "
 	@echo -ne "Main program successfully compiled in release mode!\n"
